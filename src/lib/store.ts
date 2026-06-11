@@ -22,8 +22,19 @@ let activeProfileCache: MerchantProfile = DEFAULT_PROFILES[0]
 if (isClient) {
   try {
     const tx = localStorage.getItem('ta_transactions')
-    transactionsCache = tx ? JSON.parse(tx) : INITIAL_TRANSACTIONS
-    if (!tx) localStorage.setItem('ta_transactions', JSON.stringify(INITIAL_TRANSACTIONS))
+    let loadedTx = tx ? JSON.parse(tx) : INITIAL_TRANSACTIONS
+    // Migration: Force all transaction currencies and raw SMS references to Naira
+    loadedTx = loadedTx.map((t: any) => {
+      let raw = t.rawText || ''
+      raw = raw.replace(/Ksh|GHS|FCFA/gi, '₦')
+      return {
+        ...t,
+        currency: '₦',
+        rawText: raw
+      }
+    })
+    transactionsCache = loadedTx
+    localStorage.setItem('ta_transactions', JSON.stringify(loadedTx))
 
     const bl = localStorage.getItem('ta_blacklist')
     blacklistCache = bl ? JSON.parse(bl) : INITIAL_BLACKLIST
