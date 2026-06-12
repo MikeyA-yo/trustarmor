@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Trustarmor - A comprehensive security solution for your digital assets',
       },
     ],
     links: [
